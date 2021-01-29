@@ -1,5 +1,6 @@
+#include <ArduinoLowPower.h>
+#include <ECCX08.h>
 #include <WiFiNINA.h>
-#include "ArduinoLowPower.h"
 #include <utility/wifi_drv.h>
 
 void setup() {
@@ -13,7 +14,10 @@ void setup() {
   WiFiDrv::analogWrite(26, 8);
   delay(5000);
   WiFiDrv::analogWrite(26, 0);
+
   WiFi.end();
+  ECCX08.begin();
+  ECCX08.end();
 }
 
 void loop() {
@@ -24,6 +28,7 @@ void loop() {
   WiFiDrv::analogWrite(25,  8); delay(200); WiFiDrv::analogWrite(25, 0);
   WiFiDrv::analogWrite(26,  8); delay(200); WiFiDrv::analogWrite(26, 0);
   WiFiDrv::analogWrite(27, 16); delay(200); WiFiDrv::analogWrite(27, 0);
+  WiFi.end();
 
   //batteryLevel = analogRead(ADC_BATTERY) * 3.3f / 1023.0f / 1.2f * (1.2f+0.33f);
   //Serial.print("battery level: ");
