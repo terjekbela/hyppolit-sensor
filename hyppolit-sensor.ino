@@ -36,6 +36,8 @@ void setup() {
 void loop() {
   float batteryVoltage;
   int wifiStatus = WL_IDLE_STATUS;
+  IPAddress serverIP(192,168,15,124);
+  int serverPort = 1880;
   
   batteryVoltage = analogRead(ADC_BATTERY) * 3.3f / 1023.0f / 1.2f * (1.2f+0.33f);
 
@@ -43,13 +45,22 @@ void loop() {
   wifiStatus = WiFi.begin(NET_CLIENT_SSID, NET_CLIENT_PASS);
   WiFiDrv::analogWrite(LED_GREEN, 0);
   if ( wifiStatus == WL_CONNECTED) {
-    WiFiDrv::analogWrite(LED_BLUE, 16); delay(200); WiFiDrv::analogWrite(LED_BLUE, 0);
+    if (wifiClient.connect(serverIP, serverPort)) {
+      WiFiDrv::analogWrite(LED_BLUE, 16);
+      wifiClient.print("GET /test?battery=");
+      wifiClient.print(batteryVoltage);
+      wifiClient.println(" HTTP/1.0");
+      wifiClient.println();
+      delay(100);
+      WiFiDrv::analogWrite(LED_BLUE, 0);
+    } else {
+      WiFiDrv::analogWrite(LED_RED,  4); delay(200); WiFiDrv::analogWrite(LED_RED, 0);
+    }
   } else {
     WiFiDrv::analogWrite(LED_RED,  4); delay(200); WiFiDrv::analogWrite(LED_RED, 0);
-    
   }
   WiFi.end();
 
-  LowPower.deepSleep(10000);
-  //delay(10000);
+  LowPower.sleep(60000);
+  //delay(60000);
 }
