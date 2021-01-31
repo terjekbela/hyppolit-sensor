@@ -1,19 +1,30 @@
 #include <ArduinoLowPower.h>
 #include <ECCX08.h>
+#include <SPI.h>
 #include <WiFiNINA.h>
 #include <utility/wifi_drv.h>
+
+WiFiClient wifiClient;
+
+#define LED_RED   26
+#define LED_GREEN 25
+#define LED_BLUE  27
 
 void setup() {
   Serial.begin(115200);
   
   pinMode(LED_BUILTIN, OUTPUT);
-  WiFiDrv::pinMode(25, OUTPUT); //green
-  WiFiDrv::pinMode(26, OUTPUT); //red
-  WiFiDrv::pinMode(27, OUTPUT); //blue
+  WiFiDrv::pinMode(LED_GREEN, OUTPUT); //green
+  WiFiDrv::pinMode(LED_RED,   OUTPUT); //red
+  WiFiDrv::pinMode(LED_BLUE,  OUTPUT); //blue
 
-  WiFiDrv::analogWrite(26, 8);
+  WiFiDrv::analogWrite(LED_GREEN, 16);
+  WiFiDrv::analogWrite(LED_RED, 8);
+  WiFiDrv::analogWrite(LED_BLUE, 32);
   delay(5000);
-  WiFiDrv::analogWrite(26, 0);
+  WiFiDrv::analogWrite(LED_GREEN, 0);
+  WiFiDrv::analogWrite(LED_RED, 0);
+  WiFiDrv::analogWrite(LED_BLUE, 0);
 
   WiFi.end();
   ECCX08.begin();
@@ -21,17 +32,25 @@ void setup() {
 }
 
 void loop() {
-  float batteryLevel;
+  float batteryVoltage;
+  int wifiStatus = WL_IDLE_STATUS;
   
-  LowPower.sleep(10000);
-  //delay(10000);
-  WiFiDrv::analogWrite(25,  8); delay(200); WiFiDrv::analogWrite(25, 0);
-  WiFiDrv::analogWrite(26,  8); delay(200); WiFiDrv::analogWrite(26, 0);
-  WiFiDrv::analogWrite(27, 16); delay(200); WiFiDrv::analogWrite(27, 0);
+  batteryVoltage = analogRead(ADC_BATTERY) * 3.3f / 1023.0f / 1.2f * (1.2f+0.33f);
+  //Serial.batteryVoltage("battery voltage: ");
+  //Serial.print(batteryVoltage);
+  //Serial.println("V");
+
+  WiFiDrv::analogWrite(LED_GREEN,  8);
+  wifiStatus = WiFi.begin("***", "***");
+  WiFiDrv::analogWrite(LED_GREEN, 0);
+  if ( wifiStatus == WL_CONNECTED) {
+    WiFiDrv::analogWrite(LED_BLUE, 16); delay(200); WiFiDrv::analogWrite(LED_BLUE, 0);
+  } else {
+    WiFiDrv::analogWrite(LED_RED,  4); delay(200); WiFiDrv::analogWrite(LED_RED, 0);
+    
+  }
   WiFi.end();
 
-  //batteryLevel = analogRead(ADC_BATTERY) * 3.3f / 1023.0f / 1.2f * (1.2f+0.33f);
-  //Serial.print("battery level: ");
-  //Serial.print(batteryLevel);
-  //Serial.println("V");
+  LowPower.deepSleep(10000);
+  //delay(10000);
 }
