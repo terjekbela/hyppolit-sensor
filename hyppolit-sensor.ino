@@ -1,3 +1,5 @@
+#include "config-secrets.h"
+
 #include <ArduinoLowPower.h>
 #include <ECCX08.h>
 #include <SPI.h>
@@ -36,12 +38,9 @@ void loop() {
   int wifiStatus = WL_IDLE_STATUS;
   
   batteryVoltage = analogRead(ADC_BATTERY) * 3.3f / 1023.0f / 1.2f * (1.2f+0.33f);
-  //Serial.batteryVoltage("battery voltage: ");
-  //Serial.print(batteryVoltage);
-  //Serial.println("V");
 
   WiFiDrv::analogWrite(LED_GREEN,  8);
-  wifiStatus = WiFi.begin("***", "***");
+  wifiStatus = WiFi.begin(NET_CLIENT_SSID, NET_CLIENT_PASS);
   WiFiDrv::analogWrite(LED_GREEN, 0);
   if ( wifiStatus == WL_CONNECTED) {
     WiFiDrv::analogWrite(LED_BLUE, 16); delay(200); WiFiDrv::analogWrite(LED_BLUE, 0);
