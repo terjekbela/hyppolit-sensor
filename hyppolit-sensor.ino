@@ -1,3 +1,4 @@
+#include "config.h"
 #include "config-secrets.h"
 
 #include <ArduinoLowPower.h>
@@ -34,18 +35,14 @@ void setup() {
 }
 
 void loop() {
-  float batteryVoltage;
-  int wifiStatus = WL_IDLE_STATUS;
-  IPAddress serverIP(192,168,15,124);
-  int serverPort = 1880;
-  
-  batteryVoltage = analogRead(ADC_BATTERY) * 3.3f / 1023.0f / 1.2f * (1.2f+0.33f);
+  int   wifiStatus     = WL_IDLE_STATUS;
+  float batteryVoltage = analogRead(ADC_BATTERY) * 3.3f / 1023.0f / 1.2f * (1.2f+0.33f);
 
   WiFiDrv::analogWrite(LED_GREEN,  8);
   wifiStatus = WiFi.begin(NET_CLIENT_SSID, NET_CLIENT_PASS);
   WiFiDrv::analogWrite(LED_GREEN, 0);
   if ( wifiStatus == WL_CONNECTED) {
-    if (wifiClient.connect(serverIP, serverPort)) {
+    if (wifiClient.connect(IPAddress(NET_SERVER_IP), NET_SERVER_PORT)) {
       WiFiDrv::analogWrite(LED_BLUE, 16);
       wifiClient.print("GET /test?battery=");
       wifiClient.print(batteryVoltage);

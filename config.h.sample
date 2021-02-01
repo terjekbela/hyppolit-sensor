@@ -1,0 +1,2 @@
+#define NET_SERVER_IP   "<server ip>"
+#define NET_SERVER_PORT <server port>
