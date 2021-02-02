@@ -1,18 +1,40 @@
+////////////////////////////////////////////////////////////////////////////////
+// HYPPOLITsensor                                   http://github.com/terjekbela
+////////////////////////////////////////////////////////////////////////////////
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Libraries used
+////////////////////////////////////////////////////////////////////////////////
+
 #include "config.h"
 #include "config-secrets.h"
 
 #include <ArduinoLowPower.h>
-#include <ECCX08.h>
 #include <SPI.h>
 #include <WiFiNINA.h>
-#include <utility/wifi_drv.h>
-
-WiFiClient wifiClient;
+#include <ECCX08.h>
 
 #define LED_RED   26
 #define LED_GREEN 25
 #define LED_BLUE  27
 
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Runtime variables
+////////////////////////////////////////////////////////////////////////////////
+
+WiFiClient wifiClient;
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Setup / main section
+////////////////////////////////////////////////////////////////////////////////
+
+// setup routine
 void setup() {
   Serial.begin(115200);
   
@@ -29,6 +51,7 @@ void setup() {
   ECCX08.end();
 }
 
+// main loop
 void loop() {
   int   wifiStatus     = WL_IDLE_STATUS;
   float batteryVoltage = analogRead(ADC_BATTERY) * 3.3f / 1023.0f / 1.2f * (1.2f+0.33f);
@@ -39,7 +62,7 @@ void loop() {
   if ( wifiStatus == WL_CONNECTED) {
     if (wifiClient.connect(IPAddress(NET_SERVER_IP), NET_SERVER_PORT)) {
       led(0,0,16);
-      wifiClient.print("GET /test?battery=");
+      wifiClient.print("GET /sensor?battery=");
       wifiClient.print(batteryVoltage);
       wifiClient.println(" HTTP/1.0");
       wifiClient.println();
