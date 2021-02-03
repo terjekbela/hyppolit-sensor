@@ -16,10 +16,6 @@
 #include <WiFiNINA.h>
 #include <ECCX08.h>
 
-#define LED_RED   26
-#define LED_GREEN 25
-#define LED_BLUE  27
-
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -62,7 +58,7 @@ void loop() {
   if ( wifiStatus == WL_CONNECTED) {
     if (wifiClient.connect(IPAddress(NET_SERVER_IP), NET_SERVER_PORT)) {
       led(0,0,16);
-      wifiClient.print("GET /sensor?battery=");
+      wifiClient.print("GET /sensor/test?battery=");
       wifiClient.print(batteryVoltage);
       wifiClient.println(" HTTP/1.0");
       wifiClient.println();
