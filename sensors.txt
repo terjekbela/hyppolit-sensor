@@ -1,23 +1,26 @@
-in stock
+in stock sensors
 ------------------------------------------------------------------------
-SHT21 / HTU21   - Sensirion - temperature, humidity
+SHT21 / HTU21   - Sensirion - temp, humidity
 VL53L0X         - STMicro   - tof ranging
-BME280 / BMP280 - BOSCH     - temperature, humidity, pressure
+BME280 / BMP280 - BOSCH     - temp, humidity, pressure
 SI1145          - SiLabs    - uv light
-MLX90614        - Melexis   - infrared temperature
-MLX90615        - Melexis   - infrared temperature
-MCP9808         - Microchip - precision temperature
+MLX90614        - Melexis   - infrared temp
+MLX90615        - Melexis   - infrared temp
+MCP9808         - Microchip - precision temp
 CCS811          - CCS       - air quality (co)
-LSM6DS3         - STMicro   - accelerometer, gyroscope (arduino 33 iot)
+LSM6DS3         - STMicro   - accelerometer, gyroscope
 
-possible
--------------
-SHT30           - Sensirion - temperature, humidity
-SHT31           - Sensirion - temperature, humidity
-SHT35           - Sensirion - temperature, humidity
-SI7021          - SiLabs    - temperature, humidity
-HDC1080         - TI        - temperature, humidity
-APDS-9960       -           - rgb and gesture
-VEML6070        -           - uv light
-VEML6075        -           - uv light
+sensors ordered
+------------------------------------------------------------------------
+APDS-9960       - Broadcom  - rgb and gesture
+
+possible sensors for testing
+------------------------------------------------------------------------
+SHT30           - Sensirion - temp, humidity
+SHT31           - Sensirion - temp, humidity
+SHT35           - Sensirion - temp, humidity
+SI7021          - SiLabs    - temp, humidity
+HDC1080         - TI        - temp, humidity
+VEML6070        - Vishay    - uv light                 
+VEML6075        - Vishay    - uv light
 
