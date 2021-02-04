@@ -17,6 +17,8 @@
 #include <WiFiNINA.h>
 #include <ECCX08.h>
 
+#include <Adafruit_MCP9808.h>
+
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -46,13 +48,15 @@ void setup() {
   WiFi.end();
   ECCX08.begin();
   ECCX08.end();
+
+  sensorSetupMCP9808();
 }
 
 // main loop
 void loop() {
-  int   wifiStatus     = WL_IDLE_STATUS;
-  float batteryVoltage = analogRead(ADC_BATTERY) * 3.3f / 1023.0f / 1.2f * (1.2f+0.33f);
-
+  int   wifiStatus       = WL_IDLE_STATUS;
+  float batteryVoltage   = analogRead(ADC_BATTERY) * 3.3f / 1023.0f / 1.2f * (1.2f+0.33f);
+  float temperatureValue = sensorValueMCP9808();
   led(0,8,0);
   wifiStatus = WiFi.begin(NET_CLIENT_SSID, NET_CLIENT_PASS);
   led(0,0,0);
@@ -61,8 +65,8 @@ void loop() {
       led(0,0,16);
       wifiClient.print("GET /sensor/1?battery=");
       wifiClient.print(batteryVoltage);
-      wifiClient.print("&percentage=");
-      wifiClient.print((int)round(batteryVoltage*100-320));
+      wifiClient.print("&temperature=");
+      wifiClient.print(temperatureValue);
       wifiClient.println(" HTTP/1.0");
       wifiClient.println();
       delay(100);
@@ -85,4 +89,24 @@ void led(byte red, byte green, byte blue) {
   WiFiDrv::analogWrite(LED_RED,   red);
   WiFiDrv::analogWrite(LED_GREEN, green);
   WiFiDrv::analogWrite(LED_BLUE,  blue);
+}
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Sensor code
+////////////////////////////////////////////////////////////////////////////////
+
+void sensorSetupMCP9808() {
+}
+
+float sensorValueMCP9808() {
+  float value = 0;
+  Adafruit_MCP9808 sensor = Adafruit_MCP9808();
+  if (sensor.begin(0x18)) {
+    sensor.wake();
+    value = sensor.readTempC();
+    sensor.shutdown_wake(1);
+  }
+  return value;
 }
