@@ -10,6 +10,7 @@
 
 #include "config.h"
 #include "config-secrets.h"
+#include "circuit.h"
 
 #include <ArduinoLowPower.h>
 #include <SPI.h>
@@ -58,8 +59,10 @@ void loop() {
   if ( wifiStatus == WL_CONNECTED) {
     if (wifiClient.connect(IPAddress(NET_SERVER_IP), NET_SERVER_PORT)) {
       led(0,0,16);
-      wifiClient.print("GET /sensor/test?battery=");
+      wifiClient.print("GET /sensor/1?battery=");
       wifiClient.print(batteryVoltage);
+      wifiClient.print("&percentage=");
+      wifiClient.print((int)round(batteryVoltage*100-320));
       wifiClient.println(" HTTP/1.0");
       wifiClient.println();
       delay(100);
