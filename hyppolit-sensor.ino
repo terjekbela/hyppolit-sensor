@@ -17,8 +17,9 @@
 #include <WiFiNINA.h>
 #include <ECCX08.h>
 
+#include <Adafruit_Sensor.h>
 #include <Adafruit_MCP9808.h>
-
+#include <Adafruit_BME280.h>
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -50,6 +51,7 @@ void setup() {
   ECCX08.end();
 
   sensorSetupMCP9808();
+  sensorSetupBME280();
 }
 
 // main loop
@@ -57,6 +59,7 @@ void loop() {
   int   wifiStatus       = WL_IDLE_STATUS;
   float batteryVoltage   = analogRead(ADC_BATTERY) * 3.3f / 1023.0f / 1.2f * (1.2f+0.33f);
   float temperatureValue = sensorValueMCP9808();
+  float humidityValue    = sensorValueBME280Humidity();
   led(0,8,0);
   wifiStatus = WiFi.begin(NET_CLIENT_SSID, NET_CLIENT_PASS);
   led(0,0,0);
@@ -67,6 +70,8 @@ void loop() {
       wifiClient.print(batteryVoltage);
       wifiClient.print("&temperature=");
       wifiClient.print(temperatureValue);
+      wifiClient.print("&humidity=");
+      wifiClient.print(humidityValue);
       wifiClient.println(" HTTP/1.0");
       wifiClient.println();
       delay(100);
@@ -108,5 +113,18 @@ float sensorValueMCP9808() {
     value = sensor.readTempC();
     sensor.shutdown_wake(1);
   }
+  return value;
+}
+
+void sensorSetupBME280() {
+}
+
+float sensorValueBME280Humidity() {
+  float value = 0;
+  Adafruit_BME280 sensor;
+  sensor.begin();
+  sensor.takeForcedMeasurement();
+  value = sensor.readHumidity();
+//  sensor.end();
   return value;
 }
