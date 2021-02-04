@@ -1,26 +1,24 @@
 in stock sensors
 ------------------------------------------------------------------------
-SHT21 / HTU21   - Sensirion - temp, humidity
-VL53L0X         - STMicro   - tof ranging
-BME280 / BMP280 - BOSCH     - temp, humidity, pressure
-SI1145          - SiLabs    - uv light
-MLX90614        - Melexis   - infrared temp
-MLX90615        - Melexis   - infrared temp
-MCP9808         - Microchip - precision temp
-CCS811          - CCS       - air quality (co)
-LSM6DS3         - STMicro   - accelerometer, gyroscope
+SHT2x           - Sensirion - temp, humidity           - https://www.sensirion.com/sht21/
+VL53L0X         - STMicro   - tof ranging              - https://www.st.com/en/imaging-and-photonics-solutions/vl53l0x.html
+LSM6DS3         - STMicro   - accelerometer, gyro      - https://www.st.com/resource/en/datasheet/lsm6ds3.pdf
+BME280 / BMP280 - BOSCH     - temp, humidity, pressure - https://www.bosch-sensortec.com/products/environmental-sensors/humidity-sensors-bme280/
+SI1145          - SiLabs    - uv light                 - https://www.silabs.com/documents/public/data-sheets/Si1145-46-47.pdf
+MLX90614        - Melexis   - infrared temp            - https://www.melexis.com/en/product/MLX90614/Digital-Plug-Play-Infrared-Thermometer-TO-Can
+MLX90615        - Melexis   - infrared temp            - https://www.melexis.com/en/product/MLX90615/Digital-Plug-Play-Infrared-Thermometer-Ultra-Small-TO-Can
+MCP9808         - Microchip - precision temp           - https://ww1.microchip.com/downloads/en/DeviceDoc/25095A.pdf
+CCS811          - ScioSense - air quality (co)         - https://www.sciosense.com/products/environmental-sensors/ccs811-gas-sensor-solution/
 
 sensors ordered
 ------------------------------------------------------------------------
-APDS-9960       - Broadcom  - rgb and gesture
+APDS-9960       - Broadcom  - rgb and gesture          - https://www.broadcom.com/products/optical-sensors/integrated-ambient-light-and-proximity-sensors/apds-9960
+VEML607x        - Vishay    - uv light                 - https://www.vishay.com/ppg?84277
+SHT3x           - Sensirion - temp, humidity           - https://www.sensirion.com/sht30/
+TMP102          - TI        - temp                     - https://www.ti.com/product/TMP102
 
 possible sensors for testing
 ------------------------------------------------------------------------
-SHT30           - Sensirion - temp, humidity
-SHT31           - Sensirion - temp, humidity
-SHT35           - Sensirion - temp, humidity
-SI7021          - SiLabs    - temp, humidity
-HDC1080         - TI        - temp, humidity
-VEML6070        - Vishay    - uv light                 
-VEML6075        - Vishay    - uv light
+SI7021          - SiLabs    - temp, humidity           - https://www.silabs.com/documents/public/data-sheets/Si7021-A20.pdf
+HDC1080         - TI        - temp, humidity           - https://www.ti.com/product/HDC1080
 
