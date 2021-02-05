@@ -60,6 +60,7 @@ void loop() {
   float batteryVoltage   = analogRead(ADC_BATTERY) * 3.3f / 1023.0f / 1.2f * (1.2f+0.33f);
   float temperatureValue = sensorValueMCP9808();
   float humidityValue    = sensorValueBME280Humidity();
+  float pressureValue    = sensorValueBME280Pressure();
   led(0,8,0);
   wifiStatus = WiFi.begin(NET_CLIENT_SSID, NET_CLIENT_PASS);
   led(0,0,0);
@@ -72,6 +73,8 @@ void loop() {
       wifiClient.print(temperatureValue);
       wifiClient.print("&humidity=");
       wifiClient.print(humidityValue);
+      wifiClient.print("&pressure=");
+      wifiClient.print(pressureValue);
       wifiClient.println(" HTTP/1.0");
       wifiClient.println();
       delay(100);
@@ -125,6 +128,16 @@ float sensorValueBME280Humidity() {
   sensor.begin();
   sensor.takeForcedMeasurement();
   value = sensor.readHumidity();
+//  sensor.end();
+  return value;
+}
+
+float sensorValueBME280Pressure() {
+  float value = 0;
+  Adafruit_BME280 sensor;
+  sensor.begin();
+  sensor.takeForcedMeasurement();
+  value = sensor.readPressure() / 100;
 //  sensor.end();
   return value;
 }
