@@ -1,2 +1,8 @@
+#define NET_CLIENT_IP   192,168,0,10
+#define NET_CLIENT_NET  255,255,255,0
+#define NET_CLIENT_GW   192,168,0,1
+#define NET_CLIENT_DNS  192,168,0,1
 #define NET_SERVER_IP   "<server ip>"
 #define NET_SERVER_PORT <server port>
+
+
