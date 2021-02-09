@@ -27,6 +27,12 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 WiFiClient wifiClient;
+#if defined(NET_CLIENT_IP)
+IPAddress ipIP (NET_CLIENT_IP);
+IPAddress ipDNS(NET_CLIENT_DNS);
+IPAddress ipGW (NET_CLIENT_GW);
+IPAddress ipNET(NET_CLIENT_NET);
+#endif
 
 
 
@@ -42,9 +48,7 @@ void setup() {
   WiFiDrv::pinMode(LED_RED,   OUTPUT); //red
   WiFiDrv::pinMode(LED_GREEN, OUTPUT); //green
   WiFiDrv::pinMode(LED_BLUE,  OUTPUT); //blue
-  led(4, 8, 16);
-  delay(5000);
-  led(0, 0, 0);
+  led(2,4,8,5000);
 
   WiFi.end();
   ECCX08.begin();
@@ -57,17 +61,11 @@ void setup() {
 // main loop
 void loop() {
   int   wifiStatus       = WL_IDLE_STATUS;
-#if defined(NET_CLIENT_IP)
-  IPAddress ipIP (NET_CLIENT_IP);
-  IPAddress ipDNS(NET_CLIENT_DNS);
-  IPAddress ipGW (NET_CLIENT_GW);
-  IPAddress ipNET(NET_CLIENT_NET);
-#endif
-float batteryVoltage   = analogRead(ADC_BATTERY) * 3.3f / 1023.0f / 1.2f * (1.2f + 0.33f);
+  float batteryVoltage   = analogRead(ADC_BATTERY) * 3.3f / 1023.0f / 1.2f * (1.2f + 0.33f);
   float temperatureValue = sensorValueMCP9808();
   float humidityValue    = sensorValueBME280Humidity();
   float pressureValue    = sensorValueBME280Pressure();
-  led(0, 8, 0);
+  led(0,0,8);
   Serial.print("Connecting: ");
   Serial.println(millis());
 #if defined(NET_CLIENT_IP)
@@ -76,10 +74,9 @@ float batteryVoltage   = analogRead(ADC_BATTERY) * 3.3f / 1023.0f / 1.2f * (1.2f
   wifiStatus = WiFi.begin(NET_CLIENT_SSID, NET_CLIENT_PASS);
   Serial.print("Connected: ");
   Serial.println(millis());
-  led(0, 0, 0);
   if ( wifiStatus == WL_CONNECTED) {
     if (wifiClient.connect(IPAddress(NET_SERVER_IP), NET_SERVER_PORT)) {
-      led(0, 0, 16);
+      led(0,4,0);
       wifiClient.print("GET /sensor/1?battery=");
       wifiClient.print(batteryVoltage);
       wifiClient.print("&temperature=");
@@ -90,17 +87,13 @@ float batteryVoltage   = analogRead(ADC_BATTERY) * 3.3f / 1023.0f / 1.2f * (1.2f
       wifiClient.print(pressureValue);
       wifiClient.println(" HTTP/1.0");
       wifiClient.println();
-      delay(100);
-      led(0, 0, 0);
-    } else {
-      led(4, 0, 0);
       delay(200);
-      led(0, 0, 0);
+      led(0,0,0);
+    } else {
+      led(2,0,0,200);
     }
   } else {
-    led(4, 0, 0);
-    delay(200);
-    led(0, 0, 0);
+    led(2,0,0,200);
   }
   WiFi.end();
 
@@ -108,10 +101,20 @@ float batteryVoltage   = analogRead(ADC_BATTERY) * 3.3f / 1023.0f / 1.2f * (1.2f
   //delay(60000);
 }
 
+////////////////////////////////////////////////////////////////////////////////
+// LED library
+////////////////////////////////////////////////////////////////////////////////
+
 void led(byte red, byte green, byte blue) {
   WiFiDrv::analogWrite(LED_RED,   red);
   WiFiDrv::analogWrite(LED_GREEN, green);
   WiFiDrv::analogWrite(LED_BLUE,  blue);
+}
+
+void led(byte red, byte green, byte blue, int wait) {
+  led(red, green, blue);
+  delay(wait);
+  led(0,0,0);
 }
 
 
@@ -143,7 +146,7 @@ float sensorValueBME280Humidity() {
   sensor.begin();
   sensor.takeForcedMeasurement();
   value = sensor.readHumidity();
-  //  sensor.end();
+  // sensor.end();
   return value;
 }
 
@@ -153,6 +156,6 @@ float sensorValueBME280Pressure() {
   sensor.begin();
   sensor.takeForcedMeasurement();
   value = sensor.readPressure() / 100;
-  //  sensor.end();
+  // sensor.end();
   return value;
 }
