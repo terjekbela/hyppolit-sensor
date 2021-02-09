@@ -44,7 +44,10 @@ IPAddress ipNET(NET_CLIENT_NET);
 void setup() {
   Serial.begin(115200);
 
-  pinMode(LED_BUILTIN, OUTPUT);
+  pinMode(LED_BUILTIN,  OUTPUT);
+  pinMode(SENSOR_POWER, OUTPUT);
+  digitalWrite(SENSOR_POWER, LOW);
+
   WiFiDrv::pinMode(LED_RED,   OUTPUT); //red
   WiFiDrv::pinMode(LED_GREEN, OUTPUT); //green
   WiFiDrv::pinMode(LED_BLUE,  OUTPUT); //blue
@@ -62,9 +65,12 @@ void setup() {
 void loop() {
   int   wifiStatus       = WL_IDLE_STATUS;
   float batteryVoltage   = analogRead(ADC_BATTERY) * 3.3f / 1023.0f / 1.2f * (1.2f + 0.33f);
+  digitalWrite(SENSOR_POWER, HIGH);
+  delay(10);
   float temperatureValue = sensorValueMCP9808();
   float humidityValue    = sensorValueBME280Humidity();
   float pressureValue    = sensorValueBME280Pressure();
+  digitalWrite(SENSOR_POWER, LOW);
   led(0,0,8);
   Serial.print("Connecting: ");
   Serial.println(millis());

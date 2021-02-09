@@ -4,6 +4,8 @@
 
 
 
-#define LED_RED   26
-#define LED_GREEN 25
-#define LED_BLUE  27
+#define LED_RED      26
+#define LED_GREEN    25
+#define LED_BLUE     27
+
+#define SENSOR_POWER 2
