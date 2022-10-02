@@ -27,6 +27,11 @@
 WiFiMulti wifiMulti;
 WiFiClient wifiClient;
 
+float batteryValue;
+float temperatureValue;
+float humidityValue;
+float pressureValue;
+
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -35,34 +40,59 @@ WiFiClient wifiClient;
 
 // setup routine
 void setup() {
+  setupSerial();
+  setupIO();
+  setupNetwork();
+}
+
+// main loop
+void loop() {
+  loopReadSensors();
+  loopSendSendors();
+  loopLowPower();
+}
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Routines
+////////////////////////////////////////////////////////////////////////////////
+
+// start serial
+void setupSerial() {
   Serial.begin(115200);
+}
 
+// set pin io modes
+void setupIO() {
   pinMode(LED_BUILTIN,  OUTPUT);
-  pinMode(SENSOR_POWER, OUTPUT);
-  digitalWrite(SENSOR_POWER, LOW);
+}
 
+// connect to wireless network
+void setupNetwork() {
   wifiMulti.addAP(NET_CLIENT_SSID1, NET_CLIENT_PASS1);
   if (wifiMulti.run() != WL_CONNECTED) {
     Serial.println("Unable to connect, rebooting...");
     delay(5000);
     rp2040.reboot();
   }
-  Serial.println("WiFi connected");
-  Serial.println("IP address: ");
+  Serial.print("WiFi connected, ip: ");
   Serial.println(WiFi.localIP());
 }
 
-// main loop
-void loop() {
+// reading and storing sensor values
+void loopReadSensors(){
+  batteryValue     = 50;
+  temperatureValue = sensorValueMCP9808();
+  humidityValue    = sensorValueBME280Humidity();
+  pressureValue    = sensorValueBME280Pressure();
+}
+
+// sending sensor values to configured server
+void loopSendSendors() {
   const char*    host = NET_SERVER_NAME;
   const uint16_t port = NET_SERVER_PORT;
-  
-  float batteryValue     = 50;
-  float temperatureValue = sensorValueMCP9808();                       // getting sensor values
-  float humidityValue    = sensorValueBME280Humidity();
-  float pressureValue    = sensorValueBME280Pressure();
-
-  Serial.println("Server connecting");
+  Serial.println("Connecting to server");
   if (wifiClient.connect(host, port)) {
     Serial.println("Server connected");
     wifiClient.print("GET /sensor/1?battery=");
@@ -88,7 +118,10 @@ void loop() {
     Serial.println("Server failed to connect");
   }
   Serial.println();
+}
 
-  Serial.println("Delaying 10s...");
-  delay(10000);
+void loopLowPower() {
+  delay(15000);
+  rp2040.reboot();
+  //while (1) {}
 }
