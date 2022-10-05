@@ -29,6 +29,7 @@ WiFiClient wifiClient;
 
 float batteryValue;
 float temperatureValue;
+float temperatureCore;
 float humidityValue;
 float pressureValue;
 
@@ -48,7 +49,7 @@ void setup() {
 // main loop
 void loop() {
   loopReadSensors();
-  loopSendSendors();
+  loopSendSensors();
   loopLowPower();
 }
 
@@ -65,7 +66,9 @@ void setupSerial() {
 
 // set pin io modes
 void setupIO() {
-  pinMode(LED_BUILTIN,  OUTPUT);
+  pinMode(LED_BUILTIN, OUTPUT);
+  pinMode(DONE_RP2040, OUTPUT);
+  digitalWrite(DONE_RP2040, LOW);
 }
 
 // connect to wireless network
@@ -83,13 +86,14 @@ void setupNetwork() {
 // reading and storing sensor values
 void loopReadSensors(){
   batteryValue     = 50;
-  temperatureValue = sensorValueMCP9808();
-  humidityValue    = sensorValueBME280Humidity();
-  pressureValue    = sensorValueBME280Pressure();
+  temperatureCore  = sensorRP2040CoreTemp();
+  temperatureValue = sensorMCP9808();
+  humidityValue    = sensorBME280Humidity();
+  pressureValue    = sensorBME280Pressure();
 }
 
 // sending sensor values to configured server
-void loopSendSendors() {
+void loopSendSensors() {
   const char*    host = NET_SERVER_NAME;
   const uint16_t port = NET_SERVER_PORT;
   Serial.println("Connecting to server");
@@ -100,6 +104,10 @@ void loopSendSendors() {
     if(!isnan(temperatureValue)) {
       wifiClient.print("&temperature=");
       wifiClient.print(temperatureValue);
+    }
+    if(!isnan(temperatureCore)) {
+      wifiClient.print("&core=");
+      wifiClient.print(temperatureCore);
     }
     if(!isnan(humidityValue)) {
       wifiClient.print("&humidity=");
@@ -121,7 +129,6 @@ void loopSendSendors() {
 }
 
 void loopLowPower() {
-  delay(15000);
-  rp2040.reboot();
-  //while (1) {}
+  digitalWrite(DONE_RP2040, HIGH);
+  while (1) {}
 }

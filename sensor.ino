@@ -8,7 +8,7 @@
 // sensor code
 ////////////////////////////////////////////////////////////////////////////////
 
-float sensorValueBattery() {
+float sensorRP2040Battery() {
   #if defined(ADC_BATTERY)
     return analogRead(ADC_BATTERY) * 3.3f / 1023.0f / 1.2f * (1.2f + 0.33f);
   #else
@@ -16,7 +16,11 @@ float sensorValueBattery() {
   #endif  
 }
 
-float sensorValueMCP9808() {
+float sensorRP2040CoreTemp() {
+  return analogReadTemp(); 
+}
+
+float sensorMCP9808() {
   float value = NAN;
   Adafruit_MCP9808 sensor = Adafruit_MCP9808();
   if (sensor.begin(0x18)) {
@@ -27,7 +31,7 @@ float sensorValueMCP9808() {
   return value;
 }
 
-float sensorValueBME280Temperature() {
+float sensorBME280Temperature() {
   float value = NAN;
   Adafruit_BME280 sensor;
   sensor.begin();
@@ -36,7 +40,7 @@ float sensorValueBME280Temperature() {
   return value;
 }
 
-float sensorValueBME280Humidity() {
+float sensorBME280Humidity() {
   float value = NAN;
   Adafruit_BME280 sensor;
   sensor.begin();
@@ -45,7 +49,7 @@ float sensorValueBME280Humidity() {
   return value;
 }
 
-float sensorValueBME280Pressure() {
+float sensorBME280Pressure() {
   float value = NAN;
   Adafruit_BME280 sensor;
   sensor.begin();
