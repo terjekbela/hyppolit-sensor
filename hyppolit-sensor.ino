@@ -99,7 +99,7 @@ void loopSendSensors() {
   Serial.println("Connecting to server");
   if (wifiClient.connect(host, port)) {
     Serial.println("Server connected");
-    wifiClient.print("GET /sensor/1?battery=");
+    wifiClient.print("GET /sensor/" NET_SENSOR_ID "?battery=");
     wifiClient.print(batteryValue);
     if(!isnan(temperatureValue)) {
       wifiClient.print("&temperature=");
